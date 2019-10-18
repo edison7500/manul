@@ -97,6 +97,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Static files (CSS, JavaScript, Images)
+# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = "/static/"
+
+# REST FRAMEWORK
+# ------------------------------------------------------------------------------
+# http://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
+}
