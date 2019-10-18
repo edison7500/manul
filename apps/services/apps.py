@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class ServicesConfig(AppConfig):
-    name = 'services'
+    name = 'apps.services'
+    verbose_name = "Services"

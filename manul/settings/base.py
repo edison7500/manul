@@ -35,7 +35,6 @@ USE_X_FORWARDED_HOST = True
 
 SITE_ID = 1
 
-LOCALE_PATHS = (str(ROOT_DIR.path("dugong/conf/locale")),)
 
 ROOT_URLCONF = "manul.urls"
 
@@ -50,6 +49,9 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+]
+
+THIRD_PARTY_APPS = [
     "django_extensions",
 ]
 
@@ -59,7 +61,7 @@ LOCALE_APPS = [
     "apps.services",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + LOCALE_APPS
+INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + THIRD_PARTY_APPS + LOCALE_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -111,11 +113,9 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
