@@ -3,7 +3,7 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-![manul cat](images/5a65b3cfe245c.jpg)
+![manul cat](./images/5a65b3cfe245c.jpg =600x)
 
 
 ## 如何开发
