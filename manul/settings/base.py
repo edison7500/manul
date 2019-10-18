@@ -1,5 +1,4 @@
 import environ
-import tempfile
 
 ROOT_DIR = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
 env = environ.Env()
@@ -56,7 +55,11 @@ DJANGO_APPS = [
 
 REST_FRAMEWORK_APPS = ["rest_framework"]
 
-INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS
+LOCALE_APPS = [
+    "apps.services",
+]
+
+INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + LOCALE_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from json_field import JSONField
 
 
 class Service(models.Model):
@@ -10,7 +9,7 @@ class Service(models.Model):
     app_key = models.CharField(null=False, max_length=255)
     app_secret = models.CharField(null=False, max_length=255)
     title = models.CharField(null=False, max_length=255)
-    content = JSONField(default={})
+    content = models.TextField()
 
     created_at = models.DateTimeField(default=timezone.now, db_index=True)
     updated_at = models.DateTimeField(default=timezone.now, db_index=True)
