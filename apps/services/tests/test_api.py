@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
-from .faker_data import ServiceTypeFactory
+from .faker_data import ServiceTypeFactory, ServiceFactory
 
 f = Faker()
 
@@ -28,6 +28,7 @@ class ServiceAPITestCase(APITestCase):
 
     def setUp(self) -> None:
         self.st = ServiceTypeFactory()
+        self.service = ServiceFactory()
 
     def test_create_a_service_view(self):
         _url = reverse("api:services:index")
@@ -45,4 +46,9 @@ class ServiceAPITestCase(APITestCase):
     def test_get_service_list_view(self):
         _url = reverse("api:services:index")
         res = self.client.get(_url, follow="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_get_service_detail_view(self):
+        _url = reverse("api:services:detail", args=[self.service.pk])
+        res = self.client.get(_url, format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)

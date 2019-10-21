@@ -7,7 +7,7 @@ class ServiceTypeAdmin(admin.ModelAdmin):
 
 
 class ServiceAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["title", "type", "created_at", "updated_at"]
 
 
 admin.site.register(ServiceType, ServiceTypeAdmin)
