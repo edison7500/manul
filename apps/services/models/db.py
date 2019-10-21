@@ -6,8 +6,8 @@ import jsonfield
 
 
 class ServiceType(models.Model):
-    Vendor = Choices((0, "aliyun", _("aliyun")), (1, "tencent", _("tencent")))
-    Service = Choices((0, "sms", _("sms")))
+    Vendor = Choices((1, "aliyun", _("aliyun")), (2, "tencent", _("tencent")))
+    Service = Choices((1, "sms", _("sms")))
     vendor = models.IntegerField(default=Vendor.aliyun, choices=Vendor)
     service = models.IntegerField(default=Service.sms, choices=Service)
     extra = jsonfield.JSONField()

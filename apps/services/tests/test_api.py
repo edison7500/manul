@@ -1,9 +1,8 @@
-import json
+from faker import Faker
+from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
-from rest_framework import status
-from faker import Faker
-from pprint import pprint
+
 from .faker_data import ServiceTypeFactory
 
 f = Faker()
@@ -11,8 +10,6 @@ f = Faker()
 
 class ServiceAPITestCase(APITestCase):
 
-    # def test_create_a_service_type_view(self):
-    #     _url = reverse()
     def setUp(self) -> None:
         self.st = ServiceTypeFactory()
 
@@ -27,8 +24,6 @@ class ServiceAPITestCase(APITestCase):
             "content": {"TemplateName": f.name()}
         }
         res = self.client.post(_url, data=payload, format="json")
-        # pprint(res.content)
-        # pprint(json.loads(res.content))
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
     def test_get_service_list_view(self):
