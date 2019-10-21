@@ -1,5 +1,6 @@
-from .db import Service
+from .db import Service, ServiceType
 
 __all__ = [
+    "ServiceType",
     "Service",
 ]

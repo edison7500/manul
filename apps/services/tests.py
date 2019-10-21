@@ -15,8 +15,7 @@ class ServiceAPITestCase(APITestCase):
         _url = reverse("api:services:index")
         payload = {
             "user_id": f.pyint(),
-            "vendor": Service.Vendor.aliyun,
-            "service": "sms",
+            "type": f.pyint(),
             "app_key": f.pystr(),
             "app_secret": f.md5(),
             "title": f.name(),
