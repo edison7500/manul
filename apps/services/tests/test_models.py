@@ -2,7 +2,7 @@ from django.test import TestCase
 from apps.services.models import ServiceType
 
 
-class TestServiceTypeModelTestCase(TestCase):
+class TestServiceTypeModelTests(TestCase):
 
     def setUp(self) -> None:
         self.count = ServiceType.objects.count()
