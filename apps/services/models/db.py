@@ -9,10 +9,10 @@ class Service(models.Model):
     app_key = models.CharField(null=False, max_length=255)
     app_secret = models.CharField(null=False, max_length=255)
     title = models.CharField(null=False, max_length=255)
-    content = models.TextField()
+    content = models.TextField(default="", blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now, db_index=True)
-    updated_at = models.DateTimeField(default=timezone.now, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
+    updated_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
 
     def __str__(self):
         return self.title

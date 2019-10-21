@@ -35,7 +35,6 @@ USE_X_FORWARDED_HOST = True
 
 SITE_ID = 1
 
-
 ROOT_URLCONF = "manul.urls"
 
 WSGI_APPLICATION = "manul.wsgi.application"
@@ -49,6 +48,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # "django.contrib.sites",
 ]
 
 THIRD_PARTY_APPS = ["django_extensions"]
@@ -120,3 +120,10 @@ REST_FRAMEWORK = {
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
+
+# logging
+# ----------------------------------------------------------------------
+# https://docs.djangoproject.com/en/2.2/topics/logging/
+from .manul_logging import LOGGING as loggin_config
+
+LOGGING = loggin_config

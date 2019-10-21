@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.7.3"
+install:
+  - pip install -r requirements/dev.txt
+before_script:
+  - export DJANGO_SETTINGS_MODULE=manul.settings.dev
+  - mv .env.example .env
+script:
+  - python manage.py test
