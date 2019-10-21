@@ -22,7 +22,8 @@ class Service(models.Model):
     app_key = models.CharField(null=False, max_length=255)
     app_secret = models.CharField(null=False, max_length=255)
     title = models.CharField(null=False, max_length=255)
-    content = models.TextField(default="", blank=True)
+    # content = models.TextField(default="", blank=True)
+    content = jsonfield.JSONField()
 
     created_at = models.DateTimeField(
         default=timezone.now, db_index=True, editable=False
