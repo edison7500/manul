@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils import Choices
+import jsonfield
 
 
 class ServiceType(models.Model):
@@ -9,7 +10,7 @@ class ServiceType(models.Model):
     Service = Choices((0, "sms", _("sms")))
     vendor = models.IntegerField(default=Vendor.aliyun, choices=Vendor)
     service = models.IntegerField(default=Service.sms, choices=Service)
-    extra = models.TextField(default="", blank=True)
+    extra = jsonfield.JSONField()
 
     def __str__(self):
         return "{} - {}".format(self.get_vendor_display(), self.get_service_display())

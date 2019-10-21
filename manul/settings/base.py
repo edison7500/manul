@@ -51,7 +51,9 @@ DJANGO_APPS = [
     # "django.contrib.sites",
 ]
 
-THIRD_PARTY_APPS = ["django_extensions"]
+THIRD_PARTY_APPS = [
+    "django_extensions",
+]
 
 REST_FRAMEWORK_APPS = [
     "rest_framework",
