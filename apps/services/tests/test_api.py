@@ -8,6 +8,17 @@ from .faker_data import ServiceTypeFactory
 f = Faker()
 
 
+class ServiceTypeAPITestCase(APITestCase):
+
+    def setUp(self) -> None:
+        self.st = ServiceTypeFactory()
+
+    def test_get_service_type_list_view(self):
+        _url = reverse("api:types:index")
+        res = self.client.get(_url, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
 class ServiceAPITestCase(APITestCase):
 
     def setUp(self) -> None:
