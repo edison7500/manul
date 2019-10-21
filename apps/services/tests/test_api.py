@@ -1,3 +1,4 @@
+import json
 from faker import Faker
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -52,3 +53,27 @@ class ServiceAPITestCase(APITestCase):
         _url = reverse("api:services:detail", args=[self.service.pk])
         res = self.client.get(_url, format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_update_service_view(self):
+        _url = reverse("api:services:detail", args=[self.service.pk])
+        payload = {
+            "type": self.st.id,
+            "app_key": f.pystr(),
+            "app_secret": f.md5(),
+            "title": f.name(),
+            "content": {"TemplateName": f.name()}
+        }
+        res = self.client.put(_url, data=payload, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_patch_service_view(self):
+        _url = reverse("api:services:detail", args=[self.service.pk])
+        payload = {
+            "app_key": f.pystr(),
+            "app_secret": f.md5(),
+            "title": f.name(),
+            "content": {"TemplateName": f.name()}
+        }
+        res = self.client.patch(_url, data=payload, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+

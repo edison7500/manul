@@ -18,6 +18,6 @@ class ServiceListAPIView(generics.ListCreateAPIView):
     queryset = Service.objects.all()
 
 
-class ServiceDetailAPIView(generics.RetrieveAPIView):
+class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceSerializer
     queryset = Service.objects.all()
