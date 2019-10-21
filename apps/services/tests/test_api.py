@@ -18,6 +18,11 @@ class ServiceTypeAPITestCase(APITestCase):
         res = self.client.get(_url, format="json")
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def test_get_a_service_type_view(self):
+        _url = reverse("api:types:detail", args=[self.st.pk])
+        res = self.client.get(_url, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
 
 class ServiceAPITestCase(APITestCase):
 
