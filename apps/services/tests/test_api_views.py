@@ -8,6 +8,9 @@ class ServiceAPITestCase(APITestCase):
     def setUp(self) -> None:
         pass
 
+    def tearDown(self) -> None:
+        pass
+
     def test_service_list_api_view(self):
         _url = reverse("api:services:index")
 
