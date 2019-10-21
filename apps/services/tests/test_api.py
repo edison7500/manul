@@ -4,12 +4,15 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from faker import Faker
 from pprint import pprint
-from apps.services.models import Service
+from apps.services.models import ServiceType
 
 f = Faker()
 
 
 class ServiceAPITestCase(APITestCase):
+
+    # def test_create_a_service_type_view(self):
+    #     _url = reverse()
 
     def test_create_a_service_view(self):
         _url = reverse("api:services:index")
