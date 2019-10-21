@@ -1,18 +1,14 @@
-from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
+from rest_framework import status
 
 
 class ServiceAPITestCase(APITestCase):
 
-    def setUp(self) -> None:
-        pass
-
-    def tearDown(self) -> None:
-        pass
-
-    def test_service_list_api_view(self):
+    def test_create_a_service_view(self):
         _url = reverse("api:services:index")
 
+    def test_get_service_list_view(self):
+        _url = reverse("api:services:index")
         res = self.client.get(_url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)

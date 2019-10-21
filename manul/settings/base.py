@@ -51,11 +51,12 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "django_extensions",
-]
+THIRD_PARTY_APPS = ["django_extensions"]
 
-REST_FRAMEWORK_APPS = ["rest_framework"]
+REST_FRAMEWORK_APPS = [
+    "rest_framework",
+    "drf_yasg",
+]
 
 LOCALE_APPS = [
     "apps.services",
