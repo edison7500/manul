@@ -1,7 +1,9 @@
 from rest_framework import generics
 from rest_framework.response import Response
+from django_filters import rest_framework as filters
 from apps.services.serializers import ServiceSerializer, ServiceTypeSerializer
 from apps.services.models import ServiceType, Service
+from apps.services.filters import ServiceFilter
 
 
 class ServiceTypeListAPIView(generics.ListAPIView):
@@ -17,6 +19,8 @@ class ServiceTypeDetailAPIView(generics.RetrieveAPIView):
 class ServiceListAPIView(generics.ListCreateAPIView):
     serializer_class = ServiceSerializer
     queryset = Service.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ServiceFilter
 
 
 class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
