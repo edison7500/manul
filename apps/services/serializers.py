@@ -28,3 +28,11 @@ class ServiceSerializer(serializers.ModelSerializer):
     @swagger_serializer_method(serializer_or_field=serializers.CharField)
     def get_service_type(self, obj):
         return "{} - {}".format(obj.type.get_vendor_display(), obj.type.get_service_display())
+
+
+
+class AliYunSMSSerializer(serializers.Serializer):
+
+    phone_number = serializers.CharField(max_length=11)
+    template_param = serializers.JSONField(default={})
+
