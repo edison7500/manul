@@ -1,9 +1,12 @@
+import logging
 from rest_framework import generics
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from apps.services.serializers import ServiceSerializer, ServiceTypeSerializer
 from apps.services.models import ServiceType, Service
 from apps.services.filters import ServiceFilter
+
+logger = logging.getLogger("django")
 
 
 class ServiceTypeListAPIView(generics.ListAPIView):
@@ -32,4 +35,5 @@ class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     def options(self, request, *args, **kwargs):
         _obj = self.get_object()
-        return Response(data={"msg": "ok"})
+        # logger.info(_obj.type.options)
+        return Response(data=_obj.type.options)

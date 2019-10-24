@@ -18,7 +18,6 @@ class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = "__all__"
-        # read_only_fields = ['user_id', ]
         extra_kwargs = {
             "app_key": {"write_only": True},
             "app_secret": {"write_only": True},

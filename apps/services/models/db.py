@@ -11,7 +11,7 @@ class ServiceType(models.Model):
     title = models.CharField(max_length=255)
     vendor = models.IntegerField(default=Vendor.aliyun, choices=Vendor)
     service = models.IntegerField(default=Service.sms, choices=Service)
-    extra = jsonfield.JSONField()
+    options = jsonfield.JSONField()
 
     class Meta:
         verbose_name = _("service-type")
