@@ -4,6 +4,7 @@ from apps.services.models import ServiceType, Service
 
 class ServiceTypeAdmin(admin.ModelAdmin):
     list_display = ["title", "vendor", "service"]
+    list_filter = ["vendor", "service"]
 
 
 class ServiceAdmin(admin.ModelAdmin):
