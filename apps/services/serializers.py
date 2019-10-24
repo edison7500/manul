@@ -30,7 +30,6 @@ class ServiceSerializer(serializers.ModelSerializer):
         return "{} - {}".format(obj.type.get_vendor_display(), obj.type.get_service_display())
 
 
-
 class AliYunSMSSerializer(serializers.Serializer):
 
     phone_number = serializers.CharField(max_length=11)
