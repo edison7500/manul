@@ -11,7 +11,7 @@ class TestServiceTypeModelTests(TestCase):
         ServiceType.objects.create(
             vendor=ServiceType.Vendor.aliyun,
             service=ServiceType.Service.sms,
-            extra={"TemplateCode": 123}
+            options={"TemplateCode": 123}
         )
         new_count = ServiceType.objects.count()
         self.assertGreater(new_count, self.count)
