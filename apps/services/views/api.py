@@ -2,9 +2,11 @@ import logging
 from rest_framework import generics
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
-from apps.services.serializers import ServiceSerializer, ServiceTypeSerializer
 from apps.services.models import ServiceType, Service
 from apps.services.filters import ServiceFilter
+from apps.services.serializers import (
+    ServiceSerializer, ServiceTypeSerializer, SMSSerializer
+)
 
 logger = logging.getLogger("django")
 
@@ -30,10 +32,29 @@ class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ServiceSerializer
     queryset = Service.objects.all()
 
+    def get_serializer(self, *args, **kwargs):
+        if self.request.method.lower() == "post":
+            _obj = self.get_object()
+            if _obj.type.service == ServiceType.Service.sms:
+                return SMSSerializer(**kwargs)
+        return super().get_serializer(*args, **kwargs)
+
     def get_queryset(self):
         return super().get_queryset()
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        logger.info(instance)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def options(self, request, *args, **kwargs):
         _obj = self.get_object()
-        # logger.info(_obj.type.options)
         return Response(data=_obj.type.options)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        _obj = self.get_object()
+        r = serializer.send_sms(service=_obj)
+        return Response(data=r)

@@ -1,6 +1,17 @@
+import logging
+import re
+from datetime import datetime
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
 from apps.services.models import ServiceType, Service
+
+from aliyunsdkcore.client import AcsClient
+from aliyunsdkcore.request import CommonRequest
+
+
+logger = logging.getLogger("django")
+
+phone_number_regex = re.compile(r"^\d{1,11}$", re.IGNORECASE)
 
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
@@ -27,11 +38,37 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(serializer_or_field=serializers.CharField)
     def get_service_type(self, obj):
-        return "{} - {}".format(obj.type.get_vendor_display(), obj.type.get_service_display())
+        return "{} - {}".format(
+            obj.type.get_vendor_display(), obj.type.get_service_display()
+        )
 
 
-class AliYunSMSSerializer(serializers.Serializer):
+class SMSSerializer(serializers.Serializer):
+    phone_number = serializers.RegexField(
+        min_length=8, max_length=11, regex=phone_number_regex
+    )
+    template_param = serializers.JSONField(default={}, required=False)
 
-    phone_number = serializers.CharField(max_length=11)
-    template_param = serializers.JSONField(default={})
+    def send_sms(self, service):
+        logger.info(service.content)
+        logger.info(self.validated_data)
 
+        client = AcsClient(service.app_key, service.app_secret)
+
+        req = CommonRequest()
+        req.set_accept_format("json")
+        req.set_domain("dysmsapi.aliyuncs.com")
+        req.set_method("POST")
+        req.set_protocol_type("https")  # https | http
+        req.set_version(datetime.now().strftime("%Y-%m-%d"))
+        req.set_action_name("SendSms")
+
+        req.add_query_param("RegionId", "cn-hangzhou")
+        req.add_query_param("PhoneNumbers", self.validated_data["phone_number"])
+        req.add_query_param("SignName", service.content["SignName"])
+        req.add_query_param("TemplateCode", service.content["TemplateCode"])
+
+        res = client.do_action_with_exception(req)
+        logger.info(res)
+
+        return {"status": "send sms success"}
