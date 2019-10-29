@@ -1,13 +1,12 @@
 import logging
 import re
-from datetime import datetime
+import json
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
 from apps.services.models import ServiceType, Service
 
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
-
 
 logger = logging.getLogger("django")
 
@@ -52,6 +51,7 @@ class SMSSerializer(serializers.Serializer):
     def send_sms(self, service):
         logger.info(service.content)
         logger.info(self.validated_data)
+        _content = json.loads(service.content.replace("\'", "\""))
 
         client = AcsClient(service.app_key, service.app_secret)
 
@@ -60,15 +60,12 @@ class SMSSerializer(serializers.Serializer):
         req.set_domain("dysmsapi.aliyuncs.com")
         req.set_method("POST")
         req.set_protocol_type("https")  # https | http
-        req.set_version(datetime.now().strftime("%Y-%m-%d"))
+        req.set_version('2017-05-25')
         req.set_action_name("SendSms")
 
         req.add_query_param("RegionId", "cn-hangzhou")
         req.add_query_param("PhoneNumbers", self.validated_data["phone_number"])
-        req.add_query_param("SignName", service.content["SignName"])
-        req.add_query_param("TemplateCode", service.content["TemplateCode"])
-
+        req.add_query_param("SignName", _content["SignName"])
+        req.add_query_param("TemplateCode", _content["TemplateCode"])
         res = client.do_action_with_exception(req)
-        logger.info(res)
-
-        return {"status": "send sms success"}
+        return json.loads(res)
