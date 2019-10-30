@@ -5,4 +5,6 @@ RUN mkdir  -p /data/www/
 RUN git clone https://github.com/edison7500/manul.git /data/www/manul
 WORKDIR /data/www/manul/
 RUN pip install -r requirements/prod.txt
+RUN echo "DJANGO_DEBUG=False" >> .env
+RUN echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
 EXPOSE 8000
