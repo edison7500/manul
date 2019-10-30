@@ -27,8 +27,21 @@
 * Django-rest-framework 3.10.x
 
 
+## Docker
+
+```shell script
+git clone https://github.com/edison7500/manul.git /path/to/manul
+cd /path/to/manul
+docker build -t manul .
+docker run -itd -p 8000:8000 manul
+```
+
+
 ## API Document
 
 ```
 http://127.0.0.1:8000/api/swagger/
 ```
+
+
+
