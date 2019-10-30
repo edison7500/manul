@@ -33,6 +33,8 @@ requirements:
   - requirements/dev.txt:
       # don't update dependencies, use global 'pin' default
       update: False
+  - requirements/prod.txt:
+      update: insecure
 
 # add a label to pull requests, default is not set
 # requires private repo permissions, even on public repos
