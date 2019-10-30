@@ -53,8 +53,9 @@ class SMSSerializer(serializers.Serializer):
         logger.info(self.validated_data)
         _content = json.loads(service.content.replace("\'", "\""))
 
-        client = AcsClient(service.app_key, service.app_secret)
+        _tp = self.validated_data["template_param"]
 
+        client = AcsClient(service.app_key, service.app_secret)
         req = CommonRequest()
         req.set_accept_format("json")
         req.set_domain("dysmsapi.aliyuncs.com")
@@ -62,10 +63,11 @@ class SMSSerializer(serializers.Serializer):
         req.set_protocol_type("https")  # https | http
         req.set_version('2017-05-25')
         req.set_action_name("SendSms")
-
         req.add_query_param("RegionId", "cn-hangzhou")
         req.add_query_param("PhoneNumbers", self.validated_data["phone_number"])
         req.add_query_param("SignName", _content["SignName"])
         req.add_query_param("TemplateCode", _content["TemplateCode"])
+        req.add_query_param("TemplateParam", json.dumps(_tp))
+
         res = client.do_action_with_exception(req)
         return json.loads(res)
