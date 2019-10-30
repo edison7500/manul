@@ -25,3 +25,10 @@
 * Python 3.7.x
 * Django 2.2.x
 * Django-rest-framework 3.10.x
+
+
+## API Document
+
+```
+http://127.0.0.1:8000/api/swagger/
+```
