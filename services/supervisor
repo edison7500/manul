@@ -1,0 +1,9 @@
+[supervisord]
+nodaemon=true
+
+[program:manul]
+environment =
+    DJANGO_SETTINGS_MODULE=manul.settings.prod
+user=root
+directory=/data/www/manul
+command=gunicorn -c /etc/default/gunicon manul.wsgi

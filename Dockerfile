@@ -10,4 +10,8 @@ RUN echo "SECRET_KEY=$(cat /proc/sys/kernel/random/uuid)" >> .env
 RUN echo "DJANGO_DEBUG=False" >> .env
 RUN echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
 
+COPY services/supervisor /etc/supervisor/conf.d/manul.conf
+COPY services/gunicon /etc/default/gunicon
+
 EXPOSE 8000
+CMD ["/usr/bin/supervisord"]
