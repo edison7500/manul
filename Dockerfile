@@ -6,6 +6,7 @@ RUN git clone https://github.com/edison7500/manul.git /data/www/manul
 WORKDIR /data/www/manul/
 RUN pip install -r requirements/prod.txt
 RUN python manage.py migrate
+RUN python manage.py loaddata data.json
 
 RUN echo "SECRET_KEY=$(cat /proc/sys/kernel/random/uuid)" >> .env
 RUN echo "DJANGO_DEBUG=False" >> .env
