@@ -5,12 +5,14 @@ RUN mkdir  -p /data/www/
 RUN git clone https://github.com/edison7500/manul.git /data/www/manul
 WORKDIR /data/www/manul/
 RUN pip install -r requirements/prod.txt
-RUN python manage.py migrate
-RUN python manage.py loaddata data.json
+
 
 RUN echo "SECRET_KEY=$(cat /proc/sys/kernel/random/uuid)" >> .env
 RUN echo "DJANGO_DEBUG=False" >> .env
 RUN echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+
+RUN python manage.py migrate
+RUN python manage.py loaddata data.json
 
 COPY services/supervisor /etc/supervisor/conf.d/manul.conf
 COPY services/gunicorn /etc/default/gunicon
