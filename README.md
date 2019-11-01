@@ -30,6 +30,10 @@
 ## Docker
 
 ```shell script
+docker pull jiaxin/manul # from docker hub
+
+#or 
+
 git clone https://github.com/edison7500/manul.git /path/to/manul
 cd /path/to/manul
 docker build -t manul .
