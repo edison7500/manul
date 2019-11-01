@@ -1,0 +1,51 @@
+[
+{
+  "model": "services.servicetype",
+  "pk": 1,
+  "fields": {
+    "title": "\u963f\u91cc\u4e91\u77ed\u4fe1",
+    "vendor": 1,
+    "service": 1,
+    "options": {
+      "request": [
+        {
+          "key": "phone_number",
+          "value": "",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "key": "template_param",
+          "value": "",
+          "type": "json",
+          "required": false
+        }
+      ],
+      "response": [
+        {
+          "key": "Code",
+          "type": "Number"
+        },
+        {
+          "key": "Message",
+          "type": "String"
+        }
+      ]
+    }
+  }
+},
+{
+  "model": "services.service",
+  "pk": 1,
+  "fields": {
+    "user_id": 1000,
+    "type": 1,
+    "app_key": "LTAIp2SI71nggo3k",
+    "app_secret": "70cSys86SntSXBuEDSeT00YyyNFqdK",
+    "title": "\u77ed\u4fe1\u9a8c\u8bc1\u7801",
+    "content": "{'SignName': '\u610f\u6d3e\u79d1\u6280', 'TemplateCode': 'SMS_150173162'}",
+    "created_at": "2019-10-24T06:35:02.318Z",
+    "updated_at": "2019-10-24T06:35:02.318Z"
+  }
+}
+]
