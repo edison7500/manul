@@ -11,9 +11,8 @@ RUN echo "SECRET_KEY=$(cat /proc/sys/kernel/random/uuid)" >> .env
 RUN echo "DJANGO_DEBUG=False" >> .env
 RUN echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
 
-RUN export DJANGO_SETTINGS_MODULE=manul.settings.prod
-RUN python manage.py migrate
-RUN python manage.py loaddata data.json
+RUN python manage.py migrate --settings="manul.settings.prod"
+RUN python manage.py loaddata data.json --settings="manul.settings.prod"
 
 COPY services/supervisor /etc/supervisor/conf.d/manul.conf
 COPY services/gunicorn /etc/default/gunicon
