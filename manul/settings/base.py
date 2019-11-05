@@ -130,6 +130,11 @@ REST_FRAMEWORK = {
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
 
+# django allauth
+# ----------------------------------------------------------------------------------------------------------------------
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
 # logging
 # ----------------------------------------------------------------------
 # https://docs.djangoproject.com/en/2.2/topics/logging/
