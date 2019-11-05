@@ -54,16 +54,14 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_extensions",
     "django_filters",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
-REST_FRAMEWORK_APPS = [
-    "rest_framework",
-    "drf_yasg",
-]
+REST_FRAMEWORK_APPS = ["rest_framework", "drf_yasg"]
 
-LOCALE_APPS = [
-    "apps.services",
-]
+LOCALE_APPS = ["apps.services"]
 
 INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + THIRD_PARTY_APPS + LOCALE_APPS
 
@@ -92,6 +90,14 @@ TEMPLATES = [
         },
     }
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -130,3 +136,4 @@ REST_FRAMEWORK = {
 from .manul_logging import LOGGING as loggin_config
 
 LOGGING = loggin_config
+
