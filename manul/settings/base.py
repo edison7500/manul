@@ -142,3 +142,10 @@ from .manul_logging import LOGGING as loggin_config
 
 LOGGING = loggin_config
 
+
+# django-bootstrap
+# ----------------------------------------------------------------------------------------------------------------------
+# https://django-bootstrap3.readthedocs.io/en/latest/settings.html
+from .bootstrap import BOOTSTRAP3 as bootstrap3_config
+
+BOOTSTRAP3 = bootstrap3_config
