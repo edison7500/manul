@@ -62,7 +62,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
 ]
 
-REST_FRAMEWORK_APPS = ["rest_framework", "drf_yasg"]
+REST_FRAMEWORK_APPS = ["rest_framework", "rest_framework.authtoken", "drf_yasg"]
 
 LOCALE_APPS = ["apps.services", "apps.account.providers.epub360"]
 
@@ -128,6 +128,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",

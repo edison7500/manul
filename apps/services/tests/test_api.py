@@ -31,6 +31,7 @@ class ServiceAPITestCase(APITestCase):
         self.st = ServiceTypeFactory()
         self.service = ServiceFactory()
         self.user = UserFactory()
+        self.user.set_password(f.password)
 
     def test_create_a_service_view(self):
         _url = reverse("api:services:index")

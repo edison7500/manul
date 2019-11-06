@@ -11,4 +11,4 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = get_user_model()
         django_get_or_create = ('username',)
 
-    username = f.username()
+    username = f.user_name()
