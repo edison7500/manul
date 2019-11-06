@@ -1,4 +1,3 @@
-import os
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
@@ -31,7 +30,7 @@ LOGGING = {
             "level": "ERROR",
             "class": "logging.FileHandler",
             "formatter": "error",
-            "filename": env("DJANGO_LOG_FILE", default="/tmp/django.log"),
+            "filename": env("DJANGO_LOG_FILE"),
             "mode": "a",
         },
     },
