@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 app_name = "api"
 
 urlpatterns = [
+    path("auth/", include("rest_auth.urls")),
     path("types/", include("apps.services.urls.api.types")),
     path("services/", include("apps.services.urls.api.services")),
 ]

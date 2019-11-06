@@ -8,6 +8,8 @@ from apps.services.models import ServiceType, Service
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
 
+from apps.ext.rest.serializers import ProcessCurrentUserMixin
+
 logger = logging.getLogger("django")
 
 phone_number_regex = re.compile(r"^\d{1,11}$", re.IGNORECASE)
@@ -22,16 +24,16 @@ class ServiceTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ServiceSerializer(serializers.ModelSerializer):
+class ServiceSerializer(ProcessCurrentUserMixin, serializers.ModelSerializer):
     service_type = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
-        fields = "__all__"
+        exclude = ["user", ]
         extra_kwargs = {
             "app_key": {"write_only": True},
             "app_secret": {"write_only": True},
-            "user_id": {"write_only": True},
+            # "user": {"write_only": True},
             "type": {"write_only": True},
         }
 
@@ -40,6 +42,12 @@ class ServiceSerializer(serializers.ModelSerializer):
         return "{} - {}".format(
             obj.type.get_vendor_display(), obj.type.get_service_display()
         )
+
+    def create(self, validated_data):
+        service = Service(**validated_data)
+        service.user = self.get_current_user()
+        service.save()
+        return service
 
 
 class SMSSerializer(serializers.Serializer):

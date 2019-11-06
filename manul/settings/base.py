@@ -1,3 +1,4 @@
+import os
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # three folder back (/a/b/c/ - 3 = /)
@@ -48,22 +49,22 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.sites",
+    "django.contrib.sites",
 ]
 
 THIRD_PARTY_APPS = [
     "django_extensions",
     "django_filters",
+    "bootstrap3",
+    "allauth",
+    "rest_auth.registration",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
-REST_FRAMEWORK_APPS = [
-    "rest_framework",
-    "drf_yasg",
-]
+REST_FRAMEWORK_APPS = ["rest_framework", "rest_framework.authtoken", "drf_yasg"]
 
-LOCALE_APPS = [
-    "apps.services",
-]
+LOCALE_APPS = ["apps.services", "apps.account.providers.epub360"]
 
 INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + THIRD_PARTY_APPS + LOCALE_APPS
 
@@ -80,7 +81,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(ROOT_DIR.path("templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -92,6 +93,14 @@ TEMPLATES = [
         },
     }
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -108,7 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Static files (CSS, JavaScript, Images)
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_URL = "/static/"
+# STATIC_URL = "/static/"
+STATIC_URL = os.environ.get("STATIC_URL", "/static/")
 
 # REST FRAMEWORK
 # ------------------------------------------------------------------------------
@@ -118,11 +128,17 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
 }
+
+# django allauth
+# ----------------------------------------------------------------------------------------------------------------------
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # logging
 # ----------------------------------------------------------------------
@@ -130,3 +146,11 @@ REST_FRAMEWORK = {
 from .manul_logging import LOGGING as loggin_config
 
 LOGGING = loggin_config
+
+
+# django-bootstrap
+# ----------------------------------------------------------------------------------------------------------------------
+# https://django-bootstrap3.readthedocs.io/en/latest/settings.html
+from .bootstrap import BOOTSTRAP3 as bootstrap3_config
+
+BOOTSTRAP3 = bootstrap3_config

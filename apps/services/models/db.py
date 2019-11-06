@@ -4,6 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import Choices
 import jsonfield
 
+from django.contrib.auth import get_user_model
+
 
 class ServiceType(models.Model):
     Vendor = Choices((1, "aliyun", _("aliyun")), (2, "tencent", _("tencent")))
@@ -22,7 +24,7 @@ class ServiceType(models.Model):
 
 
 class Service(models.Model):
-    user_id = models.IntegerField(default=0,)
+    user = models.ForeignKey(get_user_model(), related_name='services', on_delete=models.CASCADE)
     type = models.ForeignKey("ServiceType", related_name="service_type", on_delete=models.CASCADE)
     app_key = models.CharField(null=False, max_length=255)
     app_secret = models.CharField(null=False, max_length=255)
