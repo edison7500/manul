@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from apps.services.models import ServiceType, Service
 from apps.services.serializers import (
@@ -14,11 +15,13 @@ logger = logging.getLogger("django")
 class ServiceTypeListAPIView(generics.ListAPIView):
     serializer_class = ServiceTypeSerializer
     queryset = ServiceType.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ServiceTypeDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ServiceTypeSerializer
     queryset = ServiceType.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ServiceListAPIView(generics.ListCreateAPIView):
