@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    re_path(r'^accounts/', include('allauth.urls')),
+    path("account/", include("allauth.urls")),
 ]
 
 urlpatterns += [path("api/", include("manul.urls.api"))]

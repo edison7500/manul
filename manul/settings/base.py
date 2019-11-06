@@ -54,6 +54,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_extensions",
     "django_filters",
+    "bootstrap3",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -61,7 +62,7 @@ THIRD_PARTY_APPS = [
 
 REST_FRAMEWORK_APPS = ["rest_framework", "drf_yasg"]
 
-LOCALE_APPS = ["apps.services", "apps.accounts.providers.epub360"]
+LOCALE_APPS = ["apps.services", "apps.account.providers.epub360"]
 
 INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + THIRD_PARTY_APPS + LOCALE_APPS
 
@@ -78,7 +79,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(ROOT_DIR.path("templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
