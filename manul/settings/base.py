@@ -61,7 +61,7 @@ THIRD_PARTY_APPS = [
 
 REST_FRAMEWORK_APPS = ["rest_framework", "drf_yasg"]
 
-LOCALE_APPS = ["apps.services"]
+LOCALE_APPS = ["apps.services", "apps.accounts.providers.epub360"]
 
 INSTALLED_APPS = DJANGO_APPS + REST_FRAMEWORK_APPS + THIRD_PARTY_APPS + LOCALE_APPS
 
