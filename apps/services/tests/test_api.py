@@ -1,10 +1,10 @@
-import json
 from faker import Faker
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from .faker_data import ServiceTypeFactory, ServiceFactory
+from apps.account.tests.faker_data import UserFactory
 
 f = Faker()
 
@@ -30,11 +30,11 @@ class ServiceAPITestCase(APITestCase):
     def setUp(self) -> None:
         self.st = ServiceTypeFactory()
         self.service = ServiceFactory()
+        self.user = UserFactory()
 
     def test_create_a_service_view(self):
         _url = reverse("api:services:index")
         payload = {
-            "user_id": f.pyint(),
             "type": self.st.id,
             "app_key": f.pystr(),
             "app_secret": f.md5(),
