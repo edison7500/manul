@@ -1,9 +1,9 @@
 import logging
+
 from rest_framework import generics
 from rest_framework.response import Response
-from django_filters import rest_framework as filters
+
 from apps.services.models import ServiceType, Service
-from apps.services.filters import ServiceFilter
 from apps.services.serializers import (
     ServiceSerializer, ServiceTypeSerializer, SMSSerializer
 )
@@ -24,8 +24,10 @@ class ServiceTypeDetailAPIView(generics.RetrieveAPIView):
 class ServiceListAPIView(generics.ListCreateAPIView):
     serializer_class = ServiceSerializer
     queryset = Service.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = ServiceFilter
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(user=self.request.user)
 
 
 class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -40,7 +42,8 @@ class ServiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
-        return super().get_queryset()
+        qs = super().get_queryset()
+        return qs.filter(user=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

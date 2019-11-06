@@ -31,7 +31,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "app_key": {"write_only": True},
             "app_secret": {"write_only": True},
-            "user_id": {"write_only": True},
+            "user": {"write_only": True},
             "type": {"write_only": True},
         }
 
