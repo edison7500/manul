@@ -10,7 +10,6 @@ RUN pip install -r requirements/prod.txt
 RUN echo "SECRET_KEY=$(cat /proc/sys/kernel/random/uuid)" >> .env
 RUN echo "DJANGO_DEBUG=False" >> .env
 RUN echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
-RUN echo "STATIC_URL=$STATIC_URL" >> .env
 
 RUN python manage.py migrate --settings="manul.settings.prod"
 RUN python manage.py loaddata data.json --settings="manul.settings.prod"
