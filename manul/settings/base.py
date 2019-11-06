@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "bootstrap3",
     "allauth",
+    "rest_auth.registration",
     "allauth.account",
     "allauth.socialaccount",
 ]
