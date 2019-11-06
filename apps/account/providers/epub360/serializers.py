@@ -5,12 +5,11 @@ from django.contrib.auth import get_user_model
 
 try:
     from allauth.account import app_settings as allauth_settings
-    from allauth.utils import (email_address_exists,
-                               get_username_max_length)
+    # from allauth.utils import email_address_exists, get_username_max_length
     from allauth.account.adapter import get_adapter
-    from allauth.account.utils import setup_user_email
+    # from allauth.account.utils import setup_user_email
     from allauth.socialaccount.helpers import complete_social_login
-    from allauth.socialaccount.models import SocialAccount
+    # from allauth.socialaccount.models import SocialAccount
     from allauth.socialaccount.providers.base import AuthProcess
 except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
@@ -26,7 +25,7 @@ class Epub360LoginSerializer(serializers.Serializer):
     code = serializers.CharField(write_only=True, required=True)
 
     def _get_request(self):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if not isinstance(request, HttpRequest):
             request = request._request
         return request
@@ -47,7 +46,7 @@ class Epub360LoginSerializer(serializers.Serializer):
         return social_login
 
     def validate(self, attrs):
-        view = self.context.get('view')
+        view = self.context.get("view")
         request = self._get_request()
 
         if not view:
@@ -55,7 +54,7 @@ class Epub360LoginSerializer(serializers.Serializer):
                 _("View is not defined, pass it as a context variable")
             )
 
-        adapter_class = getattr(view, 'adapter_class', None)
+        adapter_class = getattr(view, "adapter_class", None)
         if not adapter_class:
             raise serializers.ValidationError(_("Define adapter_class in view"))
 
@@ -64,18 +63,16 @@ class Epub360LoginSerializer(serializers.Serializer):
 
         if attrs.get("code") and attrs.get("state"):
             # self.callback_url = getattr(view, 'callback_url', None)
-            self.client_class = getattr(view, 'client_class', None)
+            self.client_class = getattr(view, "client_class", None)
 
             # if not self.callback_url:
             #     raise serializers.ValidationError(
             #         _("Define callback_url in view")
             #     )
             if not self.client_class:
-                raise serializers.ValidationError(
-                    _("Define client_class in view")
-                )
+                raise serializers.ValidationError(_("Define client_class in view"))
 
-            code = attrs.get('code')
+            code = attrs.get("code")
             state = attrs.get("state")
 
             provider = adapter.get_provider()
@@ -92,16 +89,15 @@ class Epub360LoginSerializer(serializers.Serializer):
                 scope,
                 state,
                 headers=adapter.headers,
-                basic_auth=adapter.basic_auth
+                basic_auth=adapter.basic_auth,
             )
             token = client.get_access_token(code)
-            access_token = token['access_token']
+            access_token = token["access_token"]
 
         else:
-            raise serializers.ValidationError(
-                _("Incorrect input. code is required."))
+            raise serializers.ValidationError(_("Incorrect input. code is required."))
 
-        social_token = adapter.parse_token({'access_token': access_token})
+        social_token = adapter.parse_token({"access_token": access_token})
         social_token.app = app
 
         try:
@@ -117,9 +113,9 @@ class Epub360LoginSerializer(serializers.Serializer):
             # link up the accounts due to security constraints
             if allauth_settings.UNIQUE_EMAIL:
                 # Do we have an account already with this email address?
-                account_exists = get_user_model().objects.filter(
-                    email=login.user.email,
-                ).exists()
+                account_exists = (
+                    get_user_model().objects.filter(email=login.user.email).exists()
+                )
                 if account_exists:
                     raise serializers.ValidationError(
                         _("User is already registered with this e-mail address.")
@@ -128,6 +124,6 @@ class Epub360LoginSerializer(serializers.Serializer):
             login.lookup()
             login.save(request, connect=True)
 
-        attrs['user'] = login.account.user
+        attrs["user"] = login.account.user
 
         return attrs
