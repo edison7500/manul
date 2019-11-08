@@ -12,8 +12,8 @@ RUN echo "DJANGO_DEBUG=False" >> .env
 RUN echo "DATABASE_URL=${DATABASE_URL}" >> .env
 RUN echo "DJANGO_LOG_FILE=/tmp/django.log" >> .env
 
-RUN python manage.py migrate --settings="manul.settings.prod"
-RUN python manage.py loaddata data.json --settings="manul.settings.prod"
+#RUN python manage.py migrate --settings="manul.settings.prod"
+#RUN python manage.py loaddata data.json --settings="manul.settings.prod"
 
 COPY services/supervisor /etc/supervisor/conf.d/manul.conf
 COPY services/gunicorn /etc/default/gunicon
