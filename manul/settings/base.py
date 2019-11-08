@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ["*"]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    "default": env.db("DATABASE_URL", default=str(ROOT_DIR.path("db.sqlite3")))
+    "default": env.db("DATABASE_URL")
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
