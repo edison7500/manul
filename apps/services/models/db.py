@@ -64,7 +64,6 @@ class SMSVerifyCode(models.Model):
         lowercase=True,
         include_alpha=False,
         db_index=True,
-        editable=False,
     )
     verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(

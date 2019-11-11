@@ -101,14 +101,33 @@ class SMSVerifiedSerializer(SMSSerializer):
         min_length=8, max_length=11, regex=phone_number_regex
     )
 
-    def send_sms_with_verifiy(self, service):
+    def send_sms_with_verify(self, service):
         _phone_number = self.validated_data.get("phone_number")
         return self.send_sms(
-            service=service, code=gen_verify_code(_phone_number, service)
+            service=service, code=gen_verify_code(service, _phone_number)
         )
 
 
-class SMSVerifiedCodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SMSVerifyCode
-        fields = ("code",)
+class SMSVerifiedCodeSerializer(serializers.Serializer):
+    phone_number = serializers.RegexField(
+        min_length=8, max_length=11, regex=phone_number_regex
+    )
+    code = serializers.CharField(max_length=6)
+
+    def check(self, service):
+        _phone_number = self.validated_data.get("phone_number")
+        _code = self.validated_data.get("code")
+
+        try:
+            vc = SMSVerifyCode.objects.get(
+                service=service,
+                phone_number=_phone_number,
+                code=_code,
+                verified=False,
+                expired_at__gte=datetime.now()
+            )
+            vc.verified = True
+            vc.save()
+        except SMSVerifyCode.DoesNotExist:
+            raise serializers.ValidationError("code error or expired")
+        return True

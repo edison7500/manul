@@ -79,7 +79,7 @@ class SMSVerifiedAPIView(generics.GenericAPIView):
         return qs.filter(user=self.request.user)
 
     def preform_send_sms(self, serializer, service):
-        r = serializer.send_sms_with_verifiy(service=service)
+        r = serializer.send_sms_with_verify(service=service)
         return r
 
     def post(self, request, *args, **kwargs):
@@ -95,10 +95,13 @@ class SMSVerifiedCodeCheckAPIView(generics.GenericAPIView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        _service = qs.filter(user=self.request.user)
+        return qs.filter(user=self.request.user)
 
-        return SMSVerifyCode.objects.get(service=_service, verified=False, expired_at__lte=datetime.now())
+    def preform_sms_check(self, serializer, service):
+        return serializer.check(service)
 
     def post(self, request, *args, **kwargs):
-
-        return
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        res = self.preform_sms_check(serializer, service=self.get_object())
+        return Response(data={"status": res}, status=status.HTTP_200_OK)
