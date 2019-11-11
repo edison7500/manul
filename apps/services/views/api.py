@@ -98,3 +98,7 @@ class SMSVerifiedCodeCheckAPIView(generics.GenericAPIView):
         _service = qs.filter(user=self.request.user)
 
         return SMSVerifyCode.objects.get(service=_service, verified=False, expired_at__lte=datetime.now())
+
+    def post(self, request, *args, **kwargs):
+
+        return

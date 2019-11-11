@@ -57,6 +57,7 @@ class SMSVerifyCode(models.Model):
     service = models.ForeignKey(
         Service, related_name="verify_code", on_delete=models.CASCADE
     )
+    phone_number = models.CharField(max_length=11)
     code = fields.RandomCharField(
         length=6,
         unique=True,
@@ -72,7 +73,7 @@ class SMSVerifyCode(models.Model):
     expired_at = models.DateTimeField(default=timezone.now, db_index=True)
 
     class Meta:
-        unique_together = (("service", "code"),)
+        unique_together = (("service", "phone_number", "code"),)
         verbose_name = _("sms-verify-code")
         verbose_name_plural = _("sms-verify-code")
 
