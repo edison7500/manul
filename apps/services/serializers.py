@@ -59,7 +59,7 @@ class SMSSerializer(serializers.Serializer):
     def send_sms(self, service):
         logger.info(service.content)
         logger.info(self.validated_data)
-        _content = json.loads(service.content.replace("\'", "\""))
+        _content = service.content.copy()
 
         _tp = self.validated_data["template_param"]
 
