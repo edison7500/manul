@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -97,4 +97,4 @@ class SMSVerifiedCodeCheckAPIView(generics.GenericAPIView):
         qs = super().get_queryset()
         _service = qs.filter(user=self.request.user)
 
-        return SMSVerifyCode.objects.get(service=_service)
+        return SMSVerifyCode.objects.get(service=_service, verified=False, expired_at__lte=datetime.now())

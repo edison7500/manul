@@ -1,8 +1,11 @@
+import jsonfield
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_extensions.db import fields
 from model_utils import Choices
-import jsonfield
+
+# from django_extensions.models im
 
 from django.contrib.auth import get_user_model
 
@@ -24,8 +27,12 @@ class ServiceType(models.Model):
 
 
 class Service(models.Model):
-    user = models.ForeignKey(get_user_model(), related_name='services', on_delete=models.CASCADE)
-    type = models.ForeignKey("ServiceType", related_name="service_type", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(), related_name="services", on_delete=models.CASCADE
+    )
+    type = models.ForeignKey(
+        "ServiceType", related_name="service_type", on_delete=models.CASCADE
+    )
     app_key = models.CharField(null=False, max_length=255)
     app_secret = models.CharField(null=False, max_length=255)
     title = models.CharField(null=False, max_length=255)
@@ -47,11 +54,27 @@ class Service(models.Model):
 
 
 class SMSVerifyCode(models.Model):
-    service = models.ForeignKey(Service, related_name="verify_code", on_delete=models.CASCADE)
-    code = models.CharField(max_length=8)
+    service = models.ForeignKey(
+        Service, related_name="verify_code", on_delete=models.CASCADE
+    )
+    code = fields.RandomCharField(
+        length=6,
+        unique=True,
+        lowercase=True,
+        include_alpha=False,
+        db_index=True,
+        editable=False,
+    )
     verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
+    created_at = models.DateTimeField(
+        default=timezone.now, db_index=True, editable=False
+    )
     expired_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    class Meta:
+        unique_together = (("service", "code"),)
+        verbose_name = _("sms-verify-code")
+        verbose_name_plural = _("sms-verify-code")
 
     def __str__(self):
         return self.code
