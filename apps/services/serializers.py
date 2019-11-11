@@ -56,11 +56,8 @@ class SMSSerializer(serializers.Serializer):
     )
     template_param = serializers.JSONField(default={}, required=False)
 
-    def send_sms(self, service):
-        logger.info(service.content)
-        logger.info(self.validated_data)
+    def send_sms(self, service, **kwargs):
         _content = service.content.copy()
-
         _tp = self.validated_data["template_param"]
 
         client = AcsClient(service.app_key, service.app_secret)
@@ -79,3 +76,15 @@ class SMSSerializer(serializers.Serializer):
 
         res = client.do_action_with_exception(req)
         return json.loads(res)
+
+
+class SMSVerifiedSerializer(SMSSerializer):
+
+    phone_number = serializers.RegexField(
+        min_length=8, max_length=11, regex=phone_number_regex
+    )
+
+    # def send_verified_sms(self, service):
+
+
+
