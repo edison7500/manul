@@ -1,9 +1,11 @@
 import logging
 import re
 import json
+import random
+from datetime import timedelta, datetime
 from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
-from apps.services.models import ServiceType, Service
+from apps.services.models import ServiceType, Service, SMSVerifyCode
 
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
@@ -13,6 +15,19 @@ from apps.ext.rest.serializers import ProcessCurrentUserMixin
 logger = logging.getLogger("django")
 
 phone_number_regex = re.compile(r"^\d{1,11}$", re.IGNORECASE)
+
+
+def gen_verify_code(service, cl=4, minutes=5) -> str:
+    _code = ""
+    for i in range(cl):
+        _code += "{}".format(random.randint(0, 9))
+    expired_at = datetime.now() + timedelta(minutes=minutes)
+    SMSVerifyCode.objects.create(
+        code=_code,
+        service=service,
+        expired_at=expired_at
+    )
+    return _code
 
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
@@ -56,9 +71,20 @@ class SMSSerializer(serializers.Serializer):
     )
     template_param = serializers.JSONField(default={}, required=False)
 
+    def dispatch(self):
+        # TODO: SMS Service Route
+        pass
+
     def send_sms(self, service, **kwargs):
         _content = service.content.copy()
-        _tp = self.validated_data["template_param"]
+
+        _code = kwargs.get("code", None)
+        if _code:
+            _tp = {
+                "code": _code,
+            }
+        else:
+            _tp = self.validated_data["template_param"]
 
         client = AcsClient(service.app_key, service.app_secret)
         req = CommonRequest()
@@ -79,12 +105,15 @@ class SMSSerializer(serializers.Serializer):
 
 
 class SMSVerifiedSerializer(SMSSerializer):
-
     phone_number = serializers.RegexField(
         min_length=8, max_length=11, regex=phone_number_regex
     )
 
-    # def send_verified_sms(self, service):
+    def send_sms_with_verifiy(self, service):
+        return self.send_sms(service=service, code=gen_verify_code(service))
 
 
-
+class SMSVerifiedCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SMSVerifyCode
+        fields = ("code",)

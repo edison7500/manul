@@ -4,9 +4,13 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from apps.services.models import ServiceType, Service
+from apps.services.models import ServiceType, Service, SMSVerifyCode
 from apps.services.serializers import (
-    ServiceSerializer, ServiceTypeSerializer, SMSSerializer, SMSVerifiedSerializer
+    ServiceSerializer,
+    ServiceTypeSerializer,
+    SMSSerializer,
+    SMSVerifiedSerializer,
+    SMSVerifiedCodeSerializer,
 )
 
 logger = logging.getLogger("django")
@@ -75,7 +79,7 @@ class SMSVerifiedAPIView(generics.GenericAPIView):
         return qs.filter(user=self.request.user)
 
     def preform_send_sms(self, serializer, service):
-        r = serializer.send_sms(service=service)
+        r = serializer.send_sms_with_verifiy(service=service)
         return r
 
     def post(self, request, *args, **kwargs):
@@ -83,3 +87,14 @@ class SMSVerifiedAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         _data = self.preform_send_sms(serializer, service=self.get_object())
         return Response(data=_data, status=status.HTTP_200_OK)
+
+
+class SMSVerifiedCodeCheckAPIView(generics.GenericAPIView):
+    queryset = Service.objects.all()
+    serializer_class = SMSVerifiedCodeSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        _service = qs.filter(user=self.request.user)
+
+        return SMSVerifyCode.objects.get(service=_service)

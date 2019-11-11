@@ -44,3 +44,14 @@ class Service(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SMSVerifyCode(models.Model):
+    service = models.ForeignKey(Service, related_name="verify_code", on_delete=models.CASCADE)
+    code = models.CharField(max_length=8)
+    verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True, editable=False)
+    expired_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    def __str__(self):
+        return self.code
