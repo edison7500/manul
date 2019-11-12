@@ -23,7 +23,7 @@ urlpatterns = [
     path("services/", include("apps.services.urls.api.services")),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)
 
 urlpatterns += [
     re_path(
