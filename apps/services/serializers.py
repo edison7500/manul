@@ -1,33 +1,27 @@
+import json
 import logging
 import re
-import json
-import random
 from datetime import timedelta, datetime
-from rest_framework import serializers
-from drf_yasg.utils import swagger_serializer_method
-from apps.services.models import ServiceType, Service, SMSVerifyCode
 
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
+from drf_yasg.utils import swagger_serializer_method
+from rest_framework import serializers
 
 from apps.ext.rest.serializers import ProcessCurrentUserMixin
+from apps.services.models import ServiceType, Service, SMSVerifyCode
 
 logger = logging.getLogger("django")
 
 phone_number_regex = re.compile(r"^\d{1,11}$", re.IGNORECASE)
 
 
-def gen_verify_code(service, cl=4, minutes=5) -> str:
-    _code = ""
-    for i in range(cl):
-        _code += "{}".format(random.randint(0, 9))
+def gen_verify_code(service, phone_number, minutes=5) -> str:
     expired_at = datetime.now() + timedelta(minutes=minutes)
-    SMSVerifyCode.objects.create(
-        code=_code,
-        service=service,
-        expired_at=expired_at
+    sms_verify_code = SMSVerifyCode.objects.create(
+        phone_number=phone_number, service=service, expired_at=expired_at
     )
-    return _code
+    return sms_verify_code.code
 
 
 class ServiceTypeSerializer(serializers.ModelSerializer):
@@ -44,7 +38,7 @@ class ServiceSerializer(ProcessCurrentUserMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        exclude = ["user", ]
+        exclude = ["user"]
         extra_kwargs = {
             "app_key": {"write_only": True},
             "app_secret": {"write_only": True},
@@ -80,9 +74,7 @@ class SMSSerializer(serializers.Serializer):
 
         _code = kwargs.get("code", None)
         if _code:
-            _tp = {
-                "code": _code,
-            }
+            _tp = {"code": _code}
         else:
             _tp = self.validated_data["template_param"]
 
@@ -92,7 +84,7 @@ class SMSSerializer(serializers.Serializer):
         req.set_domain("dysmsapi.aliyuncs.com")
         req.set_method("POST")
         req.set_protocol_type("https")  # https | http
-        req.set_version('2017-05-25')
+        req.set_version("2017-05-25")
         req.set_action_name("SendSms")
         req.add_query_param("RegionId", "cn-hangzhou")
         req.add_query_param("PhoneNumbers", self.validated_data["phone_number"])
@@ -109,11 +101,33 @@ class SMSVerifiedSerializer(SMSSerializer):
         min_length=8, max_length=11, regex=phone_number_regex
     )
 
-    def send_sms_with_verifiy(self, service):
-        return self.send_sms(service=service, code=gen_verify_code(service))
+    def send_sms_with_verify(self, service):
+        _phone_number = self.validated_data.get("phone_number")
+        return self.send_sms(
+            service=service, code=gen_verify_code(service, _phone_number)
+        )
 
 
-class SMSVerifiedCodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SMSVerifyCode
-        fields = ("code",)
+class SMSVerifiedCodeSerializer(serializers.Serializer):
+    phone_number = serializers.RegexField(
+        min_length=8, max_length=11, regex=phone_number_regex
+    )
+    code = serializers.CharField(max_length=6)
+
+    def check(self, service):
+        _phone_number = self.validated_data.get("phone_number")
+        _code = self.validated_data.get("code")
+
+        try:
+            vc = SMSVerifyCode.objects.get(
+                service=service,
+                phone_number=_phone_number,
+                code=_code,
+                verified=False,
+                expired_at__gte=datetime.now()
+            )
+            vc.verified = True
+            vc.save()
+        except SMSVerifyCode.DoesNotExist:
+            raise serializers.ValidationError("code error or expired")
+        return True
